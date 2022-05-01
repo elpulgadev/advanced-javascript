@@ -1,0 +1,172 @@
+- 1. Javascript và những gì cần biết
+  - 2. Javascript Runtime và Javascript Engine
+    - với browser => có 4 thành phần chính giúp JS chạy được (chạy được tác vụ bất đồng bộ):
+      - JS Engine:
+        - memory (heap)
+        - call stack (hằng đợi thực thi):
+          - quản lý đoạn code nào trong thời điểm nào
+          - tại 1 thời điểm hàm nào được thực thi thì đẩy vào call stack
+          - thực thi xong => bị remove khỏi call stack
+          - xử lý tác vụ đồng bộ thui, để xử lý bất đồng bộ cần event loops, callback queues
+      - web APIs
+      - event loops
+      - callback queues (Micro, Macro): là cấu trúc dữ liệu => quản lý thứ tự thực thi, JS là ngôn ngữ đơn luồng, k thể thực thi song song 2 tác vụ => cần những thành phần này để quản lý
+  - 3. Execution Context là gì?
+    - khi đoạn chương trình JS được thực thi ==> JS Engine => tạo mới 1 execution context => theo dõi và quản lí giám sát trình tự thực thi
+    - chương trình này có thể là 1 chương trình con hoặc toàn bộ ứng dụng khi chạy lần đầu tiên
+      - chương trình chính (app): global execution context
+      - chương trình con(function, methods): local execution context
+      - thời điểm trước khi khởi tạo execution context, JS Engine luôn thực hiện 2 giai đoạn
+        - creation phase (setup Memory để lưu trữ biến và hàm)
+        - Execution phase
+      - khi chương trình con thực thi xong => Execution Context được xoá bỏ => JS Engine thu dọn biến môi trường trong creation phase
+  - 4. Creation Phase và Hoisting
+    - creation phase: giúp làm 3 việc
+      - setup memory (variables enviroments)
+      - định nghĩa scope chain
+        - global scope
+        - script scope
+        - block scope: nơi có dấu {}
+        - function scope
+      - ràng buộc từ khoá this (ngoại trừ arrow function)
+        - default binding
+        - implicit binding
+        - explicit binding
+  - 5. Bài tập thực hành số 01 02 03
+    - 1. Practice 01
+      - bug xảy ra khi não bộ chúng ta suy nghĩ khác máy tính
+      - 1 hàm trong javascript ta có thể dùng trước hoặc sau khi khai báo
+      - nếu khai báo hàm kiểu function declaration => chỉ được gán bằng hàm trong giai đoạn thực thi => còn trong giai đoạn khởi tạo chỉ coi như 1 biến (mặc định là undefined)
+      - khi đặt debugger sẽ dừng trong giai đoạn thực thi
+      - tầm vực script: khai báo biến k nằm trong block
+      - hoisting??? => javascript k đưa code lên đầu file => phải hiểu là trước khi execution context thì phải trải qua creation phase
+    - 2. TDZ
+      - time dead zone (khu vực chết thạm thời): mô tả k thể truy xuất vào 1 biến để lấy giá trị ra, gán giá trị vào
+      - let, const: k được phép in ra hoặc gán bằng trước khi khai báo, còn var thì có thể
+      - 2 script khác nhau k thể nào chia sẻ biến được => muốn chia sẻ => đẩy ra cấp cao hơn (global = window = this)
+      - scope chain: chuỗi scope sẽ truyền vào cho những thằng con
+    - 3. Practice 02
+      - hay nhầm lẫn => trong function challenge02 => chưa chạy => vì chưa có lời gọi hàm => chỉ đang xét trong giai đoạn khởi tạo nên chỉ xét execution context hiện tại
+      - khi 1 function thực thi => mới khởi tạo ra execution context mới (local execution context) => lặp lại quá trình như cũ (giai đoạn khởi tạo và giai đoạn thực thi) => sẽ có memory riêng (local memory) => tới giai đoạn thực thi sẽ đưa function đến đỉnh của call stack => sau khi thực thi xong challenge02 => xóa nó khỏi call stack (xóa luôn execution context, local enviroment)
+    - 4. Practice 03
+      - scope: tầm vực
+      - chain: chuỗi (khác với ý nghĩa string)
+      - scope được hình thành trong giai đoạn creation Phase phụ thuộc vào vị trí khai báo hàm
+      - trong cùng 1 scope các VEs (variables enviroments) của 1 đoạn chương trình hoàn toàn có thể nhìn thấy và sử dụng thoải mái
+      - các scope con lồng bên trong sẽ được kế thừa lại từ scope cha bên ngoài
+        - script scope có thể dùng VEs trong global scope
+        - block scope có thể dùng VEs trong script scope
+        - local scope của 1 Function con có thể dùng VEs nằm trong local scope của function cha
+  - 6. Parameters và Arguments
+    - xóa local execution context => xóa ở call stack => kết thúc chương trình => global xong => nếu còn mở trình duyệt => chứ tồn tại mãi => nếu tắt => xóa global context
+  - 9. HOF và Callbacks
+    - 1. HOF và Calllbacks 01
+      - callback: mình k phải là người gọi hàm, sẽ truyền nó trong 1 tầm vực nào đó (lúc truyền có thể gọi là truyền tham chiếu), bên trong đó mới gọi hàm
+  - 10. Closure là gì và ứng dụng
+    - 1. Closure 01:
+      - tại thời điểm innerFunc được khởi tạo, javascript sẽ tạo 1 bao đóng (closure) chứa biến sử dụng có tầm vực bên ngoài, cũng dùng scope chain để tìm biến (lần lượt ra ngoài tầm vực tìm) => nhưng hiện tại outer function đã thực thi xong => nó sẽ tìm kiếm ở closure => thấy number
+      - khác với ví dụ về scope chain thì sau khi return thì ngữ cảnh thực thi của outerFunc đã bị xóa bỏ => tham số liên quan bị xóa bỏ
+    - 2. Closure 02
+      - anonymos function: hàm k tên
+      - nếu 1 function trước đó đã có bao đóng (closure) thì lần gọi hàm tiếp theo sẽ sử dụng được trạng thái trước đó
+    - \*\*\*4. Concurrency model trong Javascript
+      - setTimeout() của webAPIs chứ không phải của JS, vì nếu nó là của JS thì phải thỏa mãn single thread, nếu single thread thì trong ví dụ setTimeout() sẽ không chờ và bị block ngay thời điểm gọi và 1s sau mới gọi đến console.log('2. Hello Javascript') tuy nhiên theo demo setTimeout sẽ chờ khoảng 1s sau mới thực thi và trong quá trình chờ thì console.log('2. Hello Javascript')
+      - bản chất setTimeout không làm gì trong JS => đơn giản là gửi hàm được truyền là tham số (logHelloWorld) sang webAPIs => để webAPIs xử lý => đếm thời gian xong (truyền tham số thời gian trong setTimeout do bộ đếm quyết định) => gửi xuống Callback Queue
+      - JS là single thread nhưng khi có hỗ trợ của web browser thì đó là tác vụ khác => WebAPIs thực thi song song (Timers sẽ chạy và code JS vẫn chạy bên JS engine)
+      - trong quá trình Timer đếm => JS vẫn tiếp tục thực thi những câu lệnh của nó ở dòng console.log('2. Hello Javascript') => sau khi thực thi xong => remove khỏi định của call stack => function logHelloWorl() vẫn xếp hàng chờ ở callback queue => trình duyệt thấy javascipt vẫn còn những câu lệnh để thực thi (event loop liên tục kiểm tra nếu call stack nếu nó rỗng tức là k còn code đồng bộ nào của JS chạy mới cho phép các hàm ở callback queue lên call stack để thực thi theo cách thông thường, ngược lại nếu vẫn còn thì hàm trong callback queue vẫn phải chờ)
+      ***
+      - tính năng đang sử dụng bên dưới WebAPIs là Timers
+      - cứ miễn là hàm cũng sẽ mở ra 1 execution context mới và được xếp trong call stack
+      - cần phân tích kỹ cái nào thuộc JS engine, cái nào có sự hỗ trợ của browser
+
+2. Asynchronous Programming
+
+- 6. Bài tập thực hành số 01 02
+  - \*\*\*5. Practice 02 - Solution 02
+    - chú ý trường hợp fnGetData console.log() ra là null vì setTimout()
+- 8. Callback Hell
+  - 1. Callback Hell 01
+    - \*\*\* chú ý thuật ngữ truyền tham chiếu hàm
+    - bất kỳ chỗ nào có callback đều phải xử lý thêm phần error => khi ứng dụng to => error rãi rác nhiều nơi => khó quản lý
+    - nếu có 3 hàm lồng nhau => có 3 lỗi => phải xử lý lỗi riêng lẻ => phức tạp, khó chịu => đã xử lý được error first => những k tối ưu => nhiều vấn đề trong project lớn
+  - 2. Callback Hell 02
+
+3. Promise
+
+- 1. Micro Tasks và Macro Tasks Queue
+  - setTimeout thuộc Tasks Queue
+- 3. Fetch và Promise
+  - setTimeout giúp tương tác với tính năng trong browser (tính năng timer)
+  - promise được hiện thực dựa trên có chế thunk pattern, thay vì là function giống thunk thì là object chứa nhiều hơn function bên trong => deplay quá trình lấy dữ liệu, khi nào API của browser xử lý xong => browser giúp trigger ngược lại hàm => để lấy dữ liệu => giống thunk pattern
+- 4. Promise và Design Pattern
+  - fetch sẽ trả về promise object => các hàm trong promise sẽ được đưa vào micro task queue => khi call stack trống mới gọi các hàm này
+  - chúng ta k phải là người gọi các function này => chỉ truyền function vào thui => sau đó webAPIs sẽ giúp chúng ta gọi các function này khi xử lý thành công
+  - giúp ta giải quyết các vấn đề của callback => giúp ta có những cách truyền error trực quan, dễ quản lý hơn
+- 5. Bài tập thực hành số 01 02 03
+  - 1. Practice 01:
+    - macro queue đưa vào trước => thực thi trước
+  - 2. Practice 02:
+    - \*\*\*tính năng của webAPIs
+    - Thứ tự thực thi sẽ phụ thuộc vào code Javascript của chúng ta có phức tạp hay không
+    - micro queue sẽ được ưu tiên chạy trước khi cả 2 nằm trong queue chờ xử lý
+- 7. Promise Chain
+  - nếu ta tự viết được dựa vào cơ chế của thunk pattern vậy thì promise sinh ra để làm gì? => vì đó chỉ là tính năng cơ bản => còn nữa
+  - promise là 1 object đại diện cho 1 tác vụ bất đồng bộ với giá trị ta có thể lấy sau này
+  - nếu bất kỳ 1 thằng bị lỗi sẽ nhảy ngay xuống catch
+- 11. Tổng kết chương học Promise
+  - tất cả hàm bên ngoài nếu chưa hỗ trợ về promise => có thể dùng promise constructor để chuyển nó về promise
+  - Promise.allSettled(iterable)(giữ thành công, lỗi thì kệ) <> Promise.all(iterable)
+  - Promise.race(iterable): có thể truyền vào nhiều promise nhưng chỉ lấy thằng chạy nhanh nhất
+  - Promise.reject(reason): return về 1 promise => promise đó sẽ thất bại => được truyền giá trị cho catch
+  - Promise.resolve(value): return về 1 promise => promise đó sẽ thành công => được truyền giá trị cho then
+  - bản chất của promise cũng dùng callback => vấn đề là giải quyết callback hell => code dễ đọc
+
+4. Iterators, Generators và Async Await
+
+- 1. Giới thiệu Iteration Protocols và Generators
+  - bản chất array là object iterable có thể lặp được
+- 2. Bài tập thực hành số 01
+  - tại sao trong trường hợp này thực thi xong createIterator rồi thì execution context trong createIterator không bị xóa đi (tức là biến index không bị xóa đi)
+  - \*\*\* nhớ cái kiến thức closure => index được lưu trong closure tại thời điểm inner function được khởi tạo
+  - nếu 1 function trả về 1 object mà trong object có chứa function thì cũng liên quan đến closure
+  - \*\*\* mục đích của ví dụ này
+- 4. Bài tập thực hành số 02
+  - kiến thức về this liên quan đến 2 function lồng nhau: this của function trong là của function trong => khai báo hàm trong theo arrow function => sẽ lấy this của tầm vực bên ngoài
+- 5. Symbol là gì và ứng dụng
+  - hidden properties: là thuộc tính bình thường, lưu dữ liệu nào đó, ta chỉ xem được thôi, chứ k lấy ra xài được, k thay đổi được
+  - ứng dụng => tạo ra hidden properties để bảo vệ object của mình
+- 7. Generator Function và từ khóa yield
+  - khi gọi hàm generator function thì nó sẽ không thực thi ngay, nó chỉ nhờ JS return về 1 generator object, nếu muốn chạy vào hàm thì sử dụng .next()
+  - khi gặp từ khóa yield => dừng tại đó => thoát ra khỏi hàm => remove khỏi đỉnh call stack => tất cả giá trị được lưu ở objec đặc biệt đó
+  - yield: giúp cho function có thể tạm dừng, sau đó có thể tiếp tục chạy ở dòng đó => có thể dùng đó để làm những thứ liên quan đến bất đồng bộ
+- 9. Kết hợp Generators với Promise
+  - 1. Generator và Promise 01
+    - bản chất generator function và generator object là đồng bộ
+    - để tận dụng sức mạnh của nó cần kết hợp với promise => bất đồng bộ
+    - thay vì yield 1 con số => yield promise => để nó chờ chỗ này
+    - ý nghĩa của việc nhảy ra nhảy vào hàm là việc chúng ta cần phải chờ
+    - cộng số k thôi => k cần phải chờ => tương lai có tương tác với server => cần chờ => cho phép nhảy ngược ra hàm => thực thi trước những câu lệnh khác => khi promise xong => tiếp tục thực thi bên trong
+    - generator kết hợp promise => giúp ta cảm giác như code mình chạy từ trên xuống dưới => giống code đồng bộ => giúp não ta dễ tiếp nhận luồng chạy => code tường minh hơn
+  - 2. Generator và Promise 02
+    - bản chất ta chỉ quan tâm đến nội tại của hàm generator function => cú pháp giống bộ não của ta suy nghĩ => dùng yield để gọi API => tạm dừng ở dòng này => sau đó sẽ có nơi nào đó làm giúp => ở đây ta đang tự làm => khi có dữ liệu => response sẽ có giá trị => đó mới là ứng dụng của generator function, object kết hợp với promise
+    - trong nội tại generator function sẽ thực thi từng dòng giống y như đồng bộ
+- 10. Async Function và Await
+  - 1. Practice 02:
+    - mặc định async function sẽ return về 1 promise, nếu như trong async function không return về gì nên promise có giá trị undefined
+    - nếu như dùng then và catch với promse => có hình bóng của callback => nếu sử dụng thuần theo async await (sử dụng try, catch) sẽ không đụng gì đến callback nữa => luồng chạy sẽ thân thiện hơn => project thực tế sử dụng nhiều => k xử lý thêm vấn đề khác promise => chỉ xử lý phong cách lập trình => bản chất của async await là generator và promise
+    - nếu không return về gì thì trong hàm await sẽ return về undefined
+- 5. Observer và Observable Pattern
+  - 1. Giới thiệu chương học
+    - ví dụ 1:
+      -- producer lúc này đóng vai trò là array
+      -- it đóng vai trò là consumer
+    - ví dụ 2:
+      -- producer đóng vai trò là browser hay javascript DOM => chờ tín hiệu của người dùng
+      -- consumer người đăng ký lấy dữ liệu từ producer
+      -- mỗi lần producer có tín hiệu trả về thì nó sẽ giúp ta gọi hàm next
+  - 1. Why Observable patterm
+    - setTimeout được wrapped bởi Promise Object hiện tại đang tuân thủ theo Observers Pattern vì ta đang truyền 1 hàm đăng ký vào setTimeout còn việc gọi hàm là do JS gọi => lúc này Producer đóng vai trò là JS ngầm bên dưới => chỉ gọi hàm next chứ không truyền dữ liệu gì cả
+    - là tính năng JS chưa hỗ trợ
+    - bản chất XMLHTTPRequest cũng theo mô hình này: khi gọi API => truyền URL (đăng ký lấy dữ liệu từ URL đó) => k biết bao giờ data sẽ về => server đóng vai trò là producer phát tín hiệu ngược về cho ta => chính là consumer
+    - map: ánh xạ 1 array thành 1 array mới
+    - filter: lọc từ 1 array có nhiều phần tử thành array có ít phần tử hơn thỏa mãn điều kiện nào đó
