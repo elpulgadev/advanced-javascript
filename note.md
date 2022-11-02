@@ -1,53 +1,64 @@
 - 1. Javascript và những gì cần biết
   - 2. Javascript Runtime và Javascript Engine
+    - những thành phần cơ bản nhất để có thể giúp JS có thể chạy được trên trình duyệt: gồm 2 thành phần chính ==> js runtime (browser) và js engine
     - với browser => có 4 thành phần chính giúp JS chạy được (chạy được tác vụ bất đồng bộ):
-      - JS Engine:
-        - memory (heap)
-        - call stack (hằng đợi thực thi):
+      - JS Engine: chia ra thành 2 thành phần chính, để đoạn code chạy được thì cần quản lý liên quan đến 2 thành phần dưới đây (vì nhiều đoạn code thực thi nên phải theo nguyên tắc nào đấy ==> mới chạy tốt được)
+        - memory (heap): bộ nhớ ==> để cấp phát bộ nhớ không giới hạn (thu hồi những bộ nhớ k dùng nữa) ==> nhưng js thì mình k cần quan tâm
+        - call stack (hằng đợi thực thi): được dùng để xử lý tác vụ đồng bộ thui, để xử lý bất đồng bộ cần event loops, callback queues
           - quản lý đoạn code nào trong thời điểm nào
           - tại 1 thời điểm hàm nào được thực thi thì đẩy vào call stack
           - thực thi xong => bị remove khỏi call stack
-          - xử lý tác vụ đồng bộ thui, để xử lý bất đồng bộ cần event loops, callback queues
-      - web APIs
-      - event loops
-      - callback queues (Micro, Macro): là cấu trúc dữ liệu => quản lý thứ tự thực thi, JS là ngôn ngữ đơn luồng, k thể thực thi song song 2 tác vụ => cần những thành phần này để quản lý
+      - 3 thành phần dưới đây sẽ giúp JS có thể tương tác và quản lý các tác vụ bất đồng bộ
+        - web APIs
+        - event loops
+        - callback queues (Micro, Macro):
+          - chia ra làm 2 hằng đợi khác nhau: micro, macro
+          - là cấu trúc dữ liệu => quản lý thứ tự thực thi
+          - JS là ngôn ngữ đơn luồng, k thể thực thi song song 2 tác vụ => cần những thành phần này để quản lý
   - 3. Execution Context là gì?
     - khi đoạn chương trình JS được thực thi ==> JS Engine => tạo mới 1 execution context => theo dõi và quản lí giám sát trình tự thực thi
     - chương trình này có thể là 1 chương trình con hoặc toàn bộ ứng dụng khi chạy lần đầu tiên
       - chương trình chính (app): global execution context
-      - chương trình con(function, methods): local execution context
+      - chương trình con (function, methods): local execution context
       - thời điểm trước khi khởi tạo execution context, JS Engine luôn thực hiện 2 giai đoạn
         - creation phase (setup Memory để lưu trữ biến và hàm)
-        - Execution phase
+        - execution phase (giai đoạn thực thi)
       - khi chương trình con thực thi xong => Execution Context được xoá bỏ => JS Engine thu dọn biến môi trường trong creation phase
+        \*\*\* khi sử dụng từ execution context ta ngầm hiểu là local execution context
   - 4. Creation Phase và Hoisting
     - creation phase: giúp làm 3 việc
       - setup memory (variables enviroments)
+      - trong giai đoạn thực thi ==> tiến hành setup memory, biến môi trường => nghĩa là quét hết toàn bộ file => phân tích cú pháp (biến, hàm) => lưu vào memory => để setup sẵn vùng nhớ chúng ta có thể tương tác => tới giai đoạn thực thi mới có v ùng nhớ đã được lưu lại
+      - let và const có tầm vực nhỏ hơn var
+      - khi chạy lên global memory => browser sẽ setup 1 biến đặc biệt là global = windown = ràng buộc cho ta biến this
       - định nghĩa scope chain
         - global scope
-        - script scope
+        - script scope: biến let, const được lưu ở đây, script scope có tầm vực nhỏ hơn global scope
         - block scope: nơi có dấu {}
         - function scope
       - ràng buộc từ khoá this (ngoại trừ arrow function)
         - default binding
-        - implicit binding
-        - explicit binding
+        - implicit binding (ràng buộc ngầm)
+        - explicit binding (ràng buộc tường minh)
   - 5. Bài tập thực hành số 01 02 03
     - 1. Practice 01
       - bug xảy ra khi não bộ chúng ta suy nghĩ khác máy tính
+      - khi đặt debugger sẽ dừng trong giai đoạn thực thi
       - 1 hàm trong javascript ta có thể dùng trước hoặc sau khi khai báo
       - nếu khai báo hàm kiểu function declaration => chỉ được gán bằng hàm trong giai đoạn thực thi => còn trong giai đoạn khởi tạo chỉ coi như 1 biến (mặc định là undefined)
-      - khi đặt debugger sẽ dừng trong giai đoạn thực thi
       - tầm vực script: khai báo biến k nằm trong block
       - hoisting??? => javascript k đưa code lên đầu file => phải hiểu là trước khi execution context thì phải trải qua creation phase
     - 2. TDZ
+      - liên quan đến từ khoá let và const, khác hoàn toàn với từ khoá var (từ khoá var có thể in ra trước khi khai báo, nó là undefined)
+      - var mới được vào global, let và const nằm trong tầm vực của script
+      - luôn luôn bắt đầu khi ta bắt đầu một tầm vực mới và bên trong đó có sử dụng từ khoá let, kết thúc khi đã khai báo biến
       - time dead zone (khu vực chết thạm thời): mô tả k thể truy xuất vào 1 biến để lấy giá trị ra, gán giá trị vào
       - let, const: k được phép in ra hoặc gán bằng trước khi khai báo, còn var thì có thể
       - 2 script khác nhau k thể nào chia sẻ biến được => muốn chia sẻ => đẩy ra cấp cao hơn (global = window = this)
       - scope chain: chuỗi scope sẽ truyền vào cho những thằng con
     - 3. Practice 02
       - hay nhầm lẫn => trong function challenge02 => chưa chạy => vì chưa có lời gọi hàm => chỉ đang xét trong giai đoạn khởi tạo nên chỉ xét execution context hiện tại
-      - khi 1 function thực thi => mới khởi tạo ra execution context mới (local execution context) => lặp lại quá trình như cũ (giai đoạn khởi tạo và giai đoạn thực thi) => sẽ có memory riêng (local memory) => tới giai đoạn thực thi sẽ đưa function đến đỉnh của call stack => sau khi thực thi xong challenge02 => xóa nó khỏi call stack (xóa luôn execution context, local enviroment)
+      - khi 1 function thực thi => mới khởi tạo ra execution context mới (local execution context) => lặp lại quá trình như cũ (giai đoạn khởi tạo và giai đoạn thực thi) => sẽ có memory riêng (local memory) => tới giai đoạn thực thi sẽ đưa function đến đỉnh của call stack => sau khi thực thi xong challenge02 => xóa nó khỏi call stack (xóa luôn local execution context của challenge02 và local enviroment)
     - 4. Practice 03
       - scope: tầm vực
       - chain: chuỗi (khác với ý nghĩa string)
@@ -170,3 +181,5 @@
     - bản chất XMLHTTPRequest cũng theo mô hình này: khi gọi API => truyền URL (đăng ký lấy dữ liệu từ URL đó) => k biết bao giờ data sẽ về => server đóng vai trò là producer phát tín hiệu ngược về cho ta => chính là consumer
     - map: ánh xạ 1 array thành 1 array mới
     - filter: lọc từ 1 array có nhiều phần tử thành array có ít phần tử hơn thỏa mãn điều kiện nào đó
+
+\*\*\* css note: .parent:has(> .child) {}

@@ -38,6 +38,6 @@ function four() {
 // local three: t: undefined
 // trong scope này k có x, y, x => đi ra thằng cha tìm => tìm ở trong two() chỉ có z => ra ngoài tìm tiếp => one() chỉ có y => cứ tiếp tục
 // gọi function three() => cứ tiếp tục ra ngoài kiếm => three() cùng cấp với one() => lưu ý => scope hình thành dựa vào vị trí khai báo hàm => local four = local one (kế thừa scope của global)
-// local four: t: 30, x: 10, one: func, four: func => phục thuộc vào nơi khai báo chứ không phụ thuộc vào nơi gọi hàm
+// local four: t: 30, x: 10, one: func, four (chỉ được kế thừa từ global mà thui vì nó được khai báo ở cấp global và ngang với cấp one): func => phục thuộc vào nơi khai báo chứ không phụ thuộc vào nơi gọi hàm
 
 // *** scope được truyền 1 chuỗi dài từ ngoài vào trong lồng nha, phụ thuộc nơi khai báo hàm chứ k phụ thuộc nơi gọi hàm

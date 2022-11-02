@@ -1,23 +1,23 @@
 // start TDZ
-// không thể truy cập age khi chưa console.log(age);
-// thực tế age vẫn cố giá trị undefined nhưng nó nằm trong TDZ
-let age = 30;
+
+console.log(age);
+// không thể truy cập age khi chưa gắn giá trị
+// thực tế age vẫn có giá trị nhưng nó nằm trong TDZ
+
+let age = 29;
 
 // console.log(age);
 
 {
-  // start TDZ
-
-  // không thể truy cập name khi chưa thực thi
-  // console.log(name);
+  // console.log(lastName);
   // console.log(fullName);
 
-  let name = 'ZendVn';
+  let lastName = "Phi";
   let fullName;
 
-  console.log(name);
-  console.log(fullName);
+  // console.log(lastName);
+  // console.log(fullName);
 }
 
-window.hello = 'world';
-this.course = 'Javascript';
+window.hello = "world";
+this.course = "Javascript";

@@ -6,11 +6,11 @@ let firstName = "Phi";
 let lastName = "Nguyễn";
 let yearOfBirth = 1990;
 
-console.log("3. calAge()", calAge(yearOfBirth)); // 41
-function calAge(year) {
+console.log("3. callAge()", callAge(yearOfBirth)); // 41
+function callAge(year) {
   return 2021 - year;
 }
-console.log("4. calAge()", calAge(yearOfBirth)); // 41
+console.log("4. callAge()", callAge(yearOfBirth)); // 41
 
 console.log("5. getFullName", getFullName()); // error
 var getFullName = function (firstName, lastName) {
